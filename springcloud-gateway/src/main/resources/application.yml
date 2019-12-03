@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: sc-gateway-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+      routes:
+      - id: web-server1
+        uri: lb://web-server1
+        predicates:
+          - Path=/myweb/**
+        filters:
+          - StripPrefix=1
+      - id: web-server2
+        uri: lb://web-server2
+        predicates:
+          - Path=/myweb2/**
+        filters:
+          - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway:
+      debug
